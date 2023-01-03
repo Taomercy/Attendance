@@ -1,0 +1,7 @@
+leave:
+  - "date": "2022-11-6"
+    "when": "ALL"
+  - "date": "2022-11-21"
+    "when": "AM"
+  - "date": "2022-11-26"
+    "when": "PM"
