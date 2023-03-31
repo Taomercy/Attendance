@@ -33,11 +33,13 @@ def send_mail(subject, html):
     msg["Cc"] = ",".join(mail_info["cc"])
 
     smtp.sendmail(mail_info["from"], mail_info["to"] + mail_info["cc"], msg.as_string())
+    print("email send.")
     smtp.quit()
 
 
 def task():
-    send_date = datetime.datetime.now()
+    #send_date = datetime.datetime.now()
+    send_date = datetime.datetime.strptime("2023-04-01", "%Y-%m-%d")
     mt = MailTable(send_date)
     subject = mt.get_subject()
     context = mt.get_html()
@@ -47,7 +49,7 @@ def task():
 if __name__ == '__main__':
     scheduler = BlockingScheduler(timezone='Asia/Shanghai')
     scheduler.add_job(task, 'cron', day=1, hour=9, minute=30)
-    # scheduler.add_job(monitor_task, 'interval', seconds=5)
+    scheduler.add_job(task, 'interval', seconds=20)
     try:
         print("monitor start ...")
         scheduler.start()
