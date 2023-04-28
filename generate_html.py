@@ -167,7 +167,7 @@ class MailTable(object):
         本月加班hour写入点
         备注写入点
         """
-        leave_day = self.sum_days(self.records)
+        summary_day, notes = self.sum_days(self.records)
         context = """
         <td nowrap rowspan=2 style='border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:.75pt .75pt 0in .75pt;height:.25in;background-image:initial;background-position:initial;background-size: initial;background-repeat:initial;background-attachment:initial;background-origin: initial;background-clip: initial'>
             <p class=MsoNormal align=center style='text-align:center'><span style='font-size:9.0pt;font-family:"Microsoft YaHei",sans-serif;color:black'>{}<o:p></o:p></span></p>
@@ -180,7 +180,7 @@ class MailTable(object):
         </td>
     </tr>
     <tr style='height:15.15pt'><td nowrap style='border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:.75pt .75pt 0in .75pt;height:15.15pt;border-image: initial;background-image:initial;background-position:initial;background-size: initial;background-repeat:initial;background-attachment:initial;background-origin: initial;background-clip: initial'><p class=MsoNormal align=center style='text-align:center'><span lang=ZH-CN style='font-size:9.0pt;font-family:"Microsoft YaHei",sans-serif;color:black'>下午</span><span style='font-size:9.0pt;font-family:"Microsoft YaHei",sans-serif;color:black'><o:p></o:p></span></p></td>
-        """.format(leave_day, ot_day, notes)
+        """.format(summary_day, ot_day, notes)
         return context
 
     def get_html(self):
@@ -196,15 +196,18 @@ class MailTable(object):
         return False
 
     def sum_days(self, target_record):
+        notes = []
         day = 0.0
         for r in target_record:
             if self.month == r.get("date").month:
                 if r.get("when") == "ALL":
                     day += 1
+                    notes.append("{}请一天年假".format(datetime.datetime.strftime(r.get("date"), "%Y-%m-%d")))
                 else:
                     day += 0.5
-        summary_day = "{} DAYS".format(day)
-        return summary_day
+                    notes.append("{}请半天年假".format(datetime.datetime.strftime(r.get("date"), "%Y-%m-%d")))
+        summary_day = "{}".format("0.0")
+        return summary_day, "\n".join(notes)
 
     @staticmethod
     def get_leave_records_with_month(month):
