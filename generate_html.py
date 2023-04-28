@@ -20,13 +20,15 @@ class MailTable(object):
     workdays = None
 
     def __init__(self, send_date):
-        self.month = send_date.month - 1 if send_date.month - 1 != 0 else 12
-        self.year = send_date.year if send_date.month - 1 != 0 else send_date.year - 1
+        # self.month = send_date.month - 1 if send_date.month - 1 != 0 else 12
+        self.month = send_date.month
+        # self.year = send_date.year if send_date.month - 1 != 0 else send_date.year - 1
+        self.year = send_date.year
         self.end_day = calendar.monthrange(self.year, self.month)[1]
         self.workdays = chinese_calendar.get_workdays(start=datetime.date(self.year, self.month, 1),
                                                  end=datetime.date(self.year, self.month, self.end_day))
         self.records = self.get_leave_records_with_month(self.month)
-        self.html = "<p>Hi all,</p><p>Attendance records here.</p>"
+        self.html = "cc: chenxiao@wutron.com;liangjl@wutron.com<br> <p>Hi all,</p><p>Attendance records here. </p>"
         self.table_head = "<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=1113 style='width:834.6pt;border-collapse:collapse'>"
         self.templete_tr = """
             <tr style='height:15.6pt'>
